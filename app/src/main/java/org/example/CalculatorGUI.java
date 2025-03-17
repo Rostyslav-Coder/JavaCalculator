@@ -26,10 +26,10 @@ public class CalculatorGUI extends JFrame {
     private final JScrollPane SCROLL_PANE = new JScrollPane(HISTORY_LIST);
 
     private final Dimension displaySize = new Dimension(600, 100);
-    private final Font displayFont = new Font("Roboto", Font.PLAIN, 48);
+    private final Font displayFont = new Font("Roboto", Font.BOLD, 48);
     private final GridLayout panelLayout = new GridLayout(6, 4);
-    private final Font buttonFont = new Font("Roboto", Font.PLAIN, 24);
-    private final Font historyFont = new Font("Roboto", Font.PLAIN, 20);
+    private final Font buttonFont = new Font("Roboto", Font.BOLD, 24);
+    private final Font historyFont = new Font("Roboto", Font.BOLD, 20);
     private final Dimension historySize = new Dimension(200, 400);
 
     public CalculatorGUI() {
@@ -41,7 +41,7 @@ public class CalculatorGUI extends JFrame {
 
         setupDisplay();        
         setupPanel();
-        setupButtons(PANEL, BCL);
+        setupButtons();
         setupHistoryList();
     }
 
@@ -58,17 +58,17 @@ public class CalculatorGUI extends JFrame {
         add(PANEL, BorderLayout.CENTER);
     }
     
-    private void setupButtons(JPanel panel, ButtonClickListener buttonClickListener) {
+    private void setupButtons() {
         String[] labels = Button.BUTTON_LABELS;
         
         for (int i = 0; i < BUTTONS.length; i++) {
             BUTTONS[i] = new JButton(labels[i]);
             BUTTONS[i].setFont(buttonFont);
-            BUTTONS[i].addActionListener(buttonClickListener);
-            panel.add(BUTTONS[i]);
+            BUTTONS[i].addActionListener(BCL);
+            PANEL.add(BUTTONS[i]);
         }
     }
-    
+
     private void setupHistoryList() {
         HISTORY_LIST.setFont(historyFont);
         HISTORY_LIST.setCellRenderer(new RightAlignedCellRenderer());

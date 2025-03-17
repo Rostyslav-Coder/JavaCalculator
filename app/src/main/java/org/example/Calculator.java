@@ -1,6 +1,7 @@
 package org.example;
 
 public class Calculator {
+
     public static double add(double a, double b) {
         return a + b;
     }
@@ -14,8 +15,11 @@ public class Calculator {
     }
 
     public static double divide(double a, double b) {
-        return  a / b;
-    }
+        if (b == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        return a / b;
+    }    
 
     public static double square(double a) {
         return Math.pow(a, 2);
@@ -30,10 +34,16 @@ public class Calculator {
     }
 
     public static double inverse(double a) {
+        if (a == 0.0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
         return 1 / a;
     }
 
     public static double negate(double a) {
+        if (a == 0.0) {
+            return 0;
+        }
         return -a;
     }
 

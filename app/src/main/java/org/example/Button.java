@@ -9,7 +9,7 @@ public class Button {
 
     public static final String INV = "1/x";
     public static final String SQ = "<html>x<sup>2</sup></html>";
-    public static final String SQRT = "<html>√x</html>";
+    public static final String SQRT = "<html>&radic;x</html>";
     public static final String DIV = "/";
 
     public static final String NUM_7 = "7";

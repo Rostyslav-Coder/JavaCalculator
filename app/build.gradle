@@ -8,13 +8,20 @@ repositories {
 
 dependencies {
     implementation libs.guava
+    implementation 'org.junit.jupiter:junit-jupiter:5.12.1'
 }
 
 testing {
     suites {
         test {
-            useJUnitJupiter('5.11.1')
+            useJUnitJupiter()
         }
+    }
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
     }
 }
 
