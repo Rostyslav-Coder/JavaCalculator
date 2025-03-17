@@ -1,5 +1,8 @@
+package org.example;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 
 class ButtonClickListener implements ActionListener {
@@ -19,58 +22,58 @@ class ButtonClickListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         switch (command) {
-            case ButtonLabels.NUM_1 -> display.setText(display.getText() + "1");
-            case ButtonLabels.NUM_2 -> display.setText(display.getText() + "2");
-            case ButtonLabels.NUM_3 -> display.setText(display.getText() + "3");
-            case ButtonLabels.NUM_4 -> display.setText(display.getText() + "4");
-            case ButtonLabels.NUM_5 -> display.setText(display.getText() + "5");
-            case ButtonLabels.NUM_6 -> display.setText(display.getText() + "6");
-            case ButtonLabels.NUM_7 -> display.setText(display.getText() + "7");
-            case ButtonLabels.NUM_8 -> display.setText(display.getText() + "8");
-            case ButtonLabels.NUM_9 -> display.setText(display.getText() + "9");
-            case ButtonLabels.NUM_0 -> display.setText(display.getText() + "0");
-            case ButtonLabels.DOT -> {
+            case Button.NUM_1 -> display.setText(display.getText() + "1");
+            case Button.NUM_2 -> display.setText(display.getText() + "2");
+            case Button.NUM_3 -> display.setText(display.getText() + "3");
+            case Button.NUM_4 -> display.setText(display.getText() + "4");
+            case Button.NUM_5 -> display.setText(display.getText() + "5");
+            case Button.NUM_6 -> display.setText(display.getText() + "6");
+            case Button.NUM_7 -> display.setText(display.getText() + "7");
+            case Button.NUM_8 -> display.setText(display.getText() + "8");
+            case Button.NUM_9 -> display.setText(display.getText() + "9");
+            case Button.NUM_0 -> display.setText(display.getText() + "0");
+            case Button.DOT -> {
                 if (!display.getText().contains(".")) {
                     display.setText(display.getText() + ".");
                 }
             }
-            case ButtonLabels.ADD -> {
+            case Button.ADD -> {
                 operand_1 = Double.parseDouble(display.getText());
                 operator = "+";
                 display.setText("");
             }
-            case ButtonLabels.SUB -> {
+            case Button.SUB -> {
                 operand_1 = Double.parseDouble(display.getText());
                 operator = "-";
                 display.setText("");
             }
-            case ButtonLabels.MUL -> {
+            case Button.MUL -> {
                 operand_1 = Double.parseDouble(display.getText());
                 operator = "*";
                 display.setText("");
             }
-            case ButtonLabels.DIV -> {
+            case Button.DIV -> {
                 operand_1 = Double.parseDouble(display.getText());
                 operator = "/";
                 display.setText("");
             }
-            case ButtonLabels.BC -> {
+            case Button.BC -> {
                 String currentText = display.getText();
                 if (!currentText.isEmpty()) {
                     display.setText(currentText.substring(0, currentText.length() - 1));
                 }
             }
-            case ButtonLabels.C -> {
+            case Button.C -> {
                 operand_1 = 0;
                 operand_2 = 0;
                 result = 0;
                 operator = "";
                 display.setText("");
             }
-            case ButtonLabels.CE -> {
+            case Button.CE -> {
                 display.setText("");
             }
-            case ButtonLabels.EQ -> {
+            case Button.EQ -> {
                 if (display.getText().isEmpty()) {
                     return;
                 }
@@ -79,15 +82,15 @@ class ButtonClickListener implements ActionListener {
                 }
                 operand_2 = Double.parseDouble(display.getText());
                 result = switch (operator) {
-                    case ButtonLabels.ADD -> operand_1 + operand_2;
-                    case ButtonLabels.SUB -> operand_1 - operand_2;
-                    case ButtonLabels.MUL -> operand_1 * operand_2;
-                    case ButtonLabels.DIV -> {
-                        if (operand_2 != 0) {
-                            yield operand_1 / operand_2;
-                        } else {
+                    case Button.ADD -> Calculator.add(operand_1, operand_2);
+                    case Button.SUB -> Calculator.subtract(operand_1, operand_2);
+                    case Button.MUL -> Calculator.multiply(operand_1, operand_2);
+                    case Button.DIV -> {
+                        if (operand_2 == 0) {
                             display.setText("Error");
-                            yield 0;
+                            yield Double.NaN; // or throw an exception
+                        } else {
+                            yield Calculator.divide(operand_1, operand_2);
                         }
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + operator);
@@ -96,38 +99,40 @@ class ButtonClickListener implements ActionListener {
                 calculatorGUI.addToHistory(formatResult(operand_1) + " " + operator + " " + formatResult(operand_2) + " = " + formatResult(result));
                 operator = "";
             }
-            case ButtonLabels.SQ -> {
+            case Button.SQ -> {
                 operand_1 = Double.parseDouble(display.getText());
-                result = operand_1 * operand_1;
+                result = Calculator.square(operand_1);
                 display.setText(String.valueOf(formatResult(result)));
                 calculatorGUI.addToHistory(operand_1 + " ^ 2 = " + formatResult(result));
             }
-            case ButtonLabels.SQRT -> {
+            case Button.SQRT -> {
                 operand_1 = Double.parseDouble(display.getText());
-                result = Math.sqrt(operand_1);
+                result = Calculator.sqrt(operand_1);
                 display.setText(String.valueOf(formatResult(result)));
                 calculatorGUI.addToHistory("√" + operand_1 + " = " + formatResult(result));
             }
-            case ButtonLabels.PERCENT -> {
+            case Button.PERCENT -> {
                 operand_1 = Double.parseDouble(display.getText());
-                result = operand_1 / 100;
+                result = Calculator.percent(operand_1);
                 display.setText(String.valueOf(formatResult(result)));
                 calculatorGUI.addToHistory(operand_1 + " % = " + formatResult(result));
             }
-            case ButtonLabels.INV -> {
+            case Button.INV -> {
                 operand_1 = Double.parseDouble(display.getText());
-                if (operand_1 != 0) {
-                    result = 1 / operand_1;
+                if (operand_1 == 0) {
+                    display.setText("Error");
+                } else {
+                    result = Calculator.inverse(operand_1);
                     display.setText(String.valueOf(formatResult(result)));
                     calculatorGUI.addToHistory("1 / " + operand_1 + " = " + formatResult(result));
-                } else {
-                    display.setText("Error");
                 }
             }
-            case ButtonLabels.SIGN -> { // Обработка случая изменения знака
-                if (!display.getText().isEmpty()) {
+            case Button.SIGN -> {
+                if (display.getText().isEmpty()) {
+                    display.setText("-");
+                } else {
                     double value = Double.parseDouble(display.getText());
-                    value = -value;
+                    value = Calculator.negate(value);
                     display.setText(formatResult(value));
                 }
             }
@@ -141,4 +146,5 @@ class ButtonClickListener implements ActionListener {
             return String.format("%s", result);
         }
     }
+
 }

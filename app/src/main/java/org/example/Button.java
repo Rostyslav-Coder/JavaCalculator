@@ -1,4 +1,6 @@
-public class ButtonLabels {
+package org.example;
+
+public class Button {
 
     public static final String PERCENT = "%";
     public static final String CE = "CE";

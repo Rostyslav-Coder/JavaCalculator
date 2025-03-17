@@ -1,7 +1,10 @@
+package org.example;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -11,7 +14,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
 
 public class CalculatorGUI extends JFrame {
 
@@ -57,7 +59,7 @@ public class CalculatorGUI extends JFrame {
     }
     
     private void setupButtons(JPanel panel, ButtonClickListener buttonClickListener) {
-        String[] labels = ButtonLabels.BUTTON_LABELS;
+        String[] labels = Button.BUTTON_LABELS;
         
         for (int i = 0; i < BUTTONS.length; i++) {
             BUTTONS[i] = new JButton(labels[i]);
