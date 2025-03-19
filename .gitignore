@@ -6,3 +6,12 @@ build
 
 # Ignore VSCode project-specific settings directory
 .vscode
+
+# Ignore IntelliJ project-specific settings directory
+.idea
+
+# Ignore Eclipse project-specific settings directory
+.settings
+
+# Ignore project .class files
+bin

@@ -5,90 +5,111 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class CalculatorTests {
 
-    @Test
     @DisplayName("Test addition for multiple cases")
-    void testAddition() {
-        assertEquals(3.0, Calculator.add(1.0, 2.0));
-        assertEquals(1.0, Calculator.add(-1.0, 2.0));
-        assertEquals(0.0, Calculator.add(0.0, 0.0));
-        assertEquals(4.0, Calculator.add(1.5, 2.5));
-        assertEquals(-3.0, Calculator.add(2.0, -5.0));
+    @ParameterizedTest
+    @CsvSource({
+        "1.0, -1.0, 0.0",
+        "-1.0, 2.0, 1.0",
+        "1.2, 0.2, 1.4",
+        "1.0, -3.0, -2.0",
+        "0.0, 0.0, 0.0"
+    })
+    void testAddition(double first, double second, double expected) {
+        double result = Calculator.add(first, second);
+        assertEquals(expected, result);
     }
     
-    @Test
     @DisplayName("Test subtraction for multiple cases")
-    void testSubtraction() {
-        assertEquals(3.0, Calculator.subtract(5.0, 2.0));
-        assertEquals(-3.0, Calculator.subtract(-1.0, 2.0));
-        assertEquals(2.0, Calculator.subtract(-1.0, -3.0));
+    @ParameterizedTest
+    @CsvSource({"5.0, 2.0, 3.0", "-1.0, 2.0, -3.0", "-1.0, -3.0, 2.0"})
+    void testSubtraction(double first, double second, double expected) {
+        double result = Calculator.subtract(first, second);
+        assertEquals(expected, result);
     }
     
-    @Test
     @DisplayName("Test multiplication for multiple cases")
-    void testMultiplication() {
-        assertEquals(4.0, Calculator.multiply(2.0, 2.0));
-        assertEquals(-4.0, Calculator.multiply(2.0, -2.0));
-        assertEquals(0.0, Calculator.multiply(2.0, 0.0));
+    @ParameterizedTest
+    @CsvSource({"2.0, 2.0, 4.0", "2.0, -2.0, -4.0", "2.0, 0.0, 0.0"})
+    void testMultiplication(double first, double second, double expected) {
+        double result = Calculator.multiply(first, second);
+        assertEquals(expected, result);
     }
     
-    @Test
     @DisplayName("Test division for multiple cases")
-    void testDivision() {
-        assertEquals(2.0, Calculator.divide(4.0, 2.0));
-        assertEquals(-2.0, Calculator.divide(-4.0, 2.0));
-        assertEquals(-2.0, Calculator.divide(4.0, -2.0));
+    @ParameterizedTest
+    @CsvSource({"4.0, 2.0, 2.0", "-4.0, 2.0, -2.0", "4.0, -2.0, -2.0"})
+    void testDivision(double first, double second, double expected) {
+        double result = Calculator.divide(first, second);
+        assertEquals(expected, result);
+    }
+
+    @DisplayName("Test division by zero")
+    @ParameterizedTest
+    @CsvSource({"4.0, 0.0, Cannot divide by zero", "-4.0, 0.0, Cannot divide by zero"})
+    void testDivisionByZero(double dividend, double divisor, String expected) {
         ArithmeticException exception = assertThrows(
-            ArithmeticException.class, () -> Calculator.divide(4.0, 0.0)
+            ArithmeticException.class, () -> Calculator.divide(dividend, divisor)
         );
+        assertEquals(expected, exception.getMessage());
         assertNotNull(exception);
-        assertEquals("Cannot divide by zero", exception.getMessage());
+        assertThrows(
+            ArithmeticException.class,
+            () -> Calculator.divide(dividend, divisor)
+        );
     }
     
-    @Test
     @DisplayName("Test square() for multiple cases")
-    void testSquare() {
-        assertEquals(4.0, Calculator.square(2.0));
-        assertEquals(9.0, Calculator.square(-3.0));
-        assertEquals(0.0, Calculator.square(0.0));
+    @ParameterizedTest
+    @CsvSource({"2.0, 4.0", "-3.0, 9.0", "0.0, 0,0"})
+    void testSquare(double value, double expected) {
+        double result = Calculator.square(value);
+        assertEquals(expected, result);
     }
     
-    @Test
     @DisplayName("Test sqrt() for multiple cases")
-    void testSqrt() {
-        assertEquals(3.0, Calculator.sqrt(9.0));
-        assertEquals(5.0, Calculator.sqrt(25.0));
-        assertEquals(0.0, Calculator.sqrt(0.0));
+    @ParameterizedTest
+    @CsvSource({"9.0, 3.0", "1.0, 1.0", "0.0, 0.0"})
+    void testSqrt(double first, double expected) {
+        double result = Calculator.sqrt(first);
+        assertEquals(expected, result);
     }
     
-    @Test
     @DisplayName("Test percent() for multiple cases")
-    void testPercent() {
-        assertEquals(0.1, Calculator.percent(10.0));
-        assertEquals(0.0, Calculator.percent(0.0));
-        assertEquals(-0.5, Calculator.percent(-50.0));
+    @ParameterizedTest
+    @CsvSource({"10.0, 0.1", "0.0, 0.0", "-10.0, -0.1"})
+    void testPercent(double value, double expected) {
+        double result = Calculator.percent(value);
+        assertEquals(expected, result);
     }
     
-    @Test
+    @DisplayName("Test negate() for multiple cases")
+    @ParameterizedTest
+    @CsvSource({"1.0, -1.0", "-1.0, 1.0", "0.0, 0.0"})
+    void testNegate(double value, double expected) {
+        double result = Calculator.negate(value);
+        assertEquals(expected, result);
+    }
+    
     @DisplayName("Test inverse() for multiple cases")
-    void testInverse() {
-        assertEquals(0.5, Calculator.inverse(2.0));
-        assertEquals(-0.25, Calculator.inverse(-4.0));
+    @ParameterizedTest
+    @CsvSource({"2.0, 0.5", "-4.0, -0.25"})
+    void testInverse(double value, double expected) {
+        double result = Calculator.inverse(value);
+        assertEquals(expected, result);
+    }
+    
+    @DisplayName("Test inverse() with division by zero")
+    @Test
+    void testInverseDivisionByZero() {
         ArithmeticException exception = assertThrows(
             ArithmeticException.class, () -> Calculator.inverse(0.0)
         );
-        assertNotNull(exception);
         assertEquals("Cannot divide by zero", exception.getMessage());
-        }
-
-    @Test
-    @DisplayName("Test negate() for multiple cases")
-    void testNegate() {
-        assertEquals(-5.0, Calculator.negate(5.0));
-        assertEquals(10.0, Calculator.negate(-10.0));
-        assertEquals(0.0, Calculator.negate(0.0));
+        assertNotNull(exception);
     }
-
 }

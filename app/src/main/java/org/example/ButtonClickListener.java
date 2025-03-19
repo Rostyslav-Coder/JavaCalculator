@@ -88,7 +88,7 @@ class ButtonClickListener implements ActionListener {
                     result = Calculator.sqrt(operand_1);
                     display.setText(String.valueOf(formatResult(result)));
                     calculatorGUI.addToHistory(
-                        "√" + formatResult(operand_1) + " = " + formatResult(result)
+                        "\u221A" + formatResult(operand_1) + " = " + formatResult(result)
                     );
                 }
                 case Button.PERCENT -> {
